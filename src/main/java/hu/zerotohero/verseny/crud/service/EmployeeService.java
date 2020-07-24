@@ -50,7 +50,7 @@ public class EmployeeService {
             equipment = equipmentService.findById(employeeDTO.getOperates());
         }
 
-        validateJobAndEquipment(job, equipment, location);
+        validateJobAndEquipment(null, job, equipment, location);
 
         Employee newEmployee = new Employee(name, job, location, equipment);
         return employeeRepository.save(newEmployee);
@@ -81,8 +81,7 @@ public class EmployeeService {
             }
         }
 
-
-        validateJobAndEquipment(newJob, newEquipment, newLocation);
+        validateJobAndEquipment(employee, newJob, newEquipment, newLocation);
 
         employee.setName(newName);
         employee.setJob(newJob);
@@ -116,12 +115,12 @@ public class EmployeeService {
         return employeeRepository.findById(id).orElse(null);
     }
 
-    private void validateJobAndEquipment(EmployeeJob job, Equipment equipment, Location location)
+    private void validateJobAndEquipment(Employee employee, EmployeeJob job, Equipment equipment, Location location)
                 throws ManagerAlreadyAtLocationException, ManagerDoesNotUseEquipmentException,
                         NoSuchEntityException, EquipmentAtDifferentLocationException,
                         IncompatibleJobAndEquipmentException, EquipmentAlreadyOperatedException {
         if (EmployeeJob.MANAGER.equals(job)) {
-            if (getEmployeesByLocationAndJob(location.getId(), job).size() > 0) {
+            if (employee != null && !employee.getJob().equals(job) && getEmployeesByLocationAndJob(location.getId(), job).size() > 0) {
                 throw new ManagerAlreadyAtLocationException();
             }
             if (equipment != null) {
