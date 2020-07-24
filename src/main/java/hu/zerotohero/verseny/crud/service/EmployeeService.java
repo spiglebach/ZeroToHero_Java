@@ -38,7 +38,6 @@ public class EmployeeService {
                 EquipmentAlreadyOperatedException,
                 ManagerAlreadyAtLocationException {
         employeeDTO.validate();
-        // check constraints
         String name = employeeDTO.getName();
         EmployeeJob job = employeeDTO.getJob();
         Location location = locationService.findById(employeeDTO.getWorksat());

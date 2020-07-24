@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EquipmentRepository extends CrudRepository<Equipment, Long> {
-    @Query("from Equipment eq join eq.locatedAt loc where loc.id = :locationId")
+    @Query("select eq from Equipment eq join eq.locatedAt loc where loc.id = :locationId")
     Iterable<Equipment> findAllByLocation(@Param("locationId") Long locationId);
 
-    @Query("from Equipment eq join eq.locatedAt loc where loc.id = :locationId and type = :type")
+    @Query("select eq from Equipment eq join eq.locatedAt loc where loc.id = :locationId and type = :type")
     Iterable<Equipment> findAllByLocationAndType(@Param("locationId") Long locationId, @Param("type") EquipmentType type);
 }

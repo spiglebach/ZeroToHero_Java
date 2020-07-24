@@ -4,9 +4,9 @@ import hu.zerotohero.verseny.crud.util.EquipmentType;
 import hu.zerotohero.verseny.crud.exception.EmptyAttributeException;
 
 public class EquipmentDTO {
-    String name;
-    EquipmentType type;
-    Long locatedat;
+    private String name;
+    private EquipmentType type;
+    private Long locatedat;
 
     public EquipmentDTO(String name, EquipmentType type, Long locatedat) {
         this.name = name;
