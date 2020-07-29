@@ -18,7 +18,8 @@
   &nbsp;&nbsp;{"x": 4, "y": 4},  
   &nbsp;&nbsp;{"x": 2, "y": 4},  
   &nbsp;&nbsp;{"x": 3, "y": 4}  
-  ]
+  ]  
+  - /number-of-steps/getNumberOfSteps?numberOfStair=3&stepSizeList=1,2,3  
   - /api/location
   - /api/equipment
   - /api/employee
@@ -39,7 +40,8 @@
   &nbsp;&nbsp;"name": "Jane Doe",  
   &nbsp;&nbsp;"job": "COOK",  
   &nbsp;&nbsp;"worksat": 1,  
-  &nbsp;&nbsp;"operates": 2  
+  &nbsp;&nbsp;"operates": 2,  
+  &nbsp;&nbsp;"salary": 450  
   }
 - PUT
   - /api/location/1  
@@ -58,7 +60,8 @@
   &nbsp;&nbsp;"name": "Petra, the manager",  
   &nbsp;&nbsp;"job": "MANAGER",  
   &nbsp;&nbsp;"worksat": 1,  
-  &nbsp;&nbsp;"operates": null  
+  &nbsp;&nbsp;"operates": null,  
+  &nbsp;&nbsp;"salary": 450  
   }  
 - DELETE
   - /api/employee/3
