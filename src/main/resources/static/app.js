@@ -4,10 +4,10 @@ function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
-        $("#ordersTable").show();
+        $("#ordersTable").css("display", "table");
     }
     else {
-        $("#ordersTable").hide();
+        $("#ordersTable").css("display", "none");
     }
     $("#orders").html("");
 }
