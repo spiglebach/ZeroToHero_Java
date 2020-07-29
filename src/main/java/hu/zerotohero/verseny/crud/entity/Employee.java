@@ -23,15 +23,19 @@ public class Employee {
     @OneToOne
     private Equipment operates;
 
+    @Column(nullable = false)
+    private Integer salary;
+
     public Employee() {
 
     }
 
-    public Employee(String name, EmployeeJob job, Location location, Equipment equipment) {
+    public Employee(String name, EmployeeJob job, Location location, Equipment equipment, Integer salary) {
         this.name = name;
         this.job = job;
         this.worksAt = location;
         this.operates = equipment;
+        this.salary = salary;
     }
 
     public Long getId() {
@@ -72,5 +76,13 @@ public class Employee {
 
     public void setOperates(Equipment operates) {
         this.operates = operates;
+    }
+
+    public Integer getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Integer salary) {
+        this.salary = salary;
     }
 }

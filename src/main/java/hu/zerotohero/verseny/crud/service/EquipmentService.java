@@ -1,7 +1,6 @@
 package hu.zerotohero.verseny.crud.service;
 
 import hu.zerotohero.verseny.crud.exception.NoSuchEntityException;
-import hu.zerotohero.verseny.crud.util.EquipmentType;
 import hu.zerotohero.verseny.crud.dto.EquipmentDTO;
 import hu.zerotohero.verseny.crud.entity.Employee;
 import hu.zerotohero.verseny.crud.entity.Equipment;
@@ -21,8 +20,6 @@ public class EquipmentService {
     private EquipmentRepository equipmentRepository;
     @Autowired
     private LocationService locationService;
-    @Autowired
-    private EmployeeService employeeService;
 
     public List<Equipment> getEquipments() {
         ArrayList<Equipment> equipments = new ArrayList<>();
@@ -56,7 +53,7 @@ public class EquipmentService {
         }
         if (!equipment.getLocatedAt().equals(newLocation) || !equipment.getType().equals(equipmentDTO.getType())) {
             // Equipment relocation or type change
-            Employee employee = employeeService.findByOperatedEquipment(equipment.getId());
+            Employee employee = findEmployeeByOperatedEquipment(equipment.getId());
             if (employee != null) {
                 throw new EquipmentStillOperatedAtLocationException();
             }
@@ -72,7 +69,7 @@ public class EquipmentService {
         if (equipment == null) {
             throw new NoSuchEntityException(Equipment.class);
         }
-        Employee employee = employeeService.findByOperatedEquipment(equipment.getId());
+        Employee employee = findEmployeeByOperatedEquipment(equipment.getId());
         if (employee != null) {
             throw new EquipmentStillOperatedAtLocationException();
         }
@@ -80,19 +77,11 @@ public class EquipmentService {
         return id;
     }
 
-    public List<Equipment> getEquipmentsByLocation(Long locationId) {
-        List<Equipment> equipments = new ArrayList<>();
-        equipmentRepository.findAllByLocation(locationId).forEach(equipments::add);
-        return equipments;
-    }
-
-    public List<Equipment> getEquipmentsByLocationAndType(Long locationId, EquipmentType equipmentType) {
-        List<Equipment> equipments = new ArrayList<>();
-        equipmentRepository.findAllByLocationAndType(locationId, equipmentType).forEach(equipments::add);
-        return equipments;
-    }
-
     public Equipment findById(Long id) {
         return equipmentRepository.findById(id).orElse(null);
+    }
+
+    private Employee findEmployeeByOperatedEquipment(Long equipmentId) {
+        return equipmentRepository.findEmployeeByOperatedEquipment(equipmentId).orElse(null);
     }
 }

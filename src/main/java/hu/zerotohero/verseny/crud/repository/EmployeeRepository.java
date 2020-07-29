@@ -11,12 +11,15 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
-    @Query("select emp from Employee emp join emp.worksAt loc where loc.id = :locationId")
-    Iterable<Employee> findAllByLocation(@Param("locationId") Long locationId);
-
     @Query("select emp from Employee emp join emp.worksAt loc where emp.job = :job and loc.id = :locationId")
     Iterable<Employee> findAllByLocationAndJob(@Param("locationId") Long locationId, @Param("job")EmployeeJob job);
 
     @Query("select emp from Employee emp join emp.operates equipment where equipment.id = :equipmentId")
     Optional<Employee> findByOperatedEquipment(@Param("equipmentId") Long equipmentId);
+
+    @Query(value = "select max(emp.salary) from Employee emp join emp.worksAt loc where loc.id = :locationId and emp.job <> 'MANAGER'")
+    Optional<Integer> findMaxSalaryOfNonManagersByLocation(@Param("locationId") Long locationId);
+
+    @Query("select avg(emp.salary) from Employee emp join emp.worksAt loc where loc.id = :locationId and emp.job = :job")
+    Optional<Double> findAvgSalaryByLocationAndJob(@Param("locationId") Long locationId, @Param("job")EmployeeJob job);
 }

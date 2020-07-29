@@ -2,9 +2,7 @@ package hu.zerotohero.verseny.crud.service;
 
 import hu.zerotohero.verseny.crud.dto.LocationDTO;
 import hu.zerotohero.verseny.crud.entity.Location;
-import hu.zerotohero.verseny.crud.exception.EmptyAttributeException;
-import hu.zerotohero.verseny.crud.exception.LocationNotEmptyException;
-import hu.zerotohero.verseny.crud.exception.NoSuchEntityException;
+import hu.zerotohero.verseny.crud.exception.*;
 import hu.zerotohero.verseny.crud.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +15,6 @@ import java.util.Optional;
 public class LocationService {
     @Autowired
     private LocationRepository locationRepository;
-    @Autowired
-    private EmployeeService employeeService;
-    @Autowired
-    private EquipmentService equipmentService;
 
     public List<Location> getLocations() {
         ArrayList<Location> locations = new ArrayList<>();
@@ -30,7 +24,9 @@ public class LocationService {
         return locations;
     }
 
-    public Location newLocation(LocationDTO locationDTO) throws EmptyAttributeException {
+    public Location newLocation(LocationDTO locationDTO) throws EmptyAttributeException,
+                                                                LocationNameNotValidException,
+                                                                LocationAddressNotValidException {
         locationDTO.validate();
         Location location = new Location(locationDTO.getName(), locationDTO.getAddress());
         return locationRepository.save(location);
@@ -38,7 +34,9 @@ public class LocationService {
 
     public Location updateLocation(Long id, LocationDTO locationDTO)
                 throws EmptyAttributeException,
-            NoSuchEntityException {
+                        LocationNameNotValidException,
+                        LocationAddressNotValidException,
+                        NoSuchEntityException {
         locationDTO.validate();
         Location location = findById(id);
         if (location == null) {
@@ -54,8 +52,8 @@ public class LocationService {
         if (location == null) {
             throw new NoSuchEntityException(Location.class);
         }
-        if (equipmentService.getEquipmentsByLocation(id).size() != 0
-            || employeeService.getEmployeesByLocation(id).size() != 0) {
+        if (getEquipmentCountByLocation(id) != 0
+            || getEmployeeCountByLocation(id) != 0) {
             throw new LocationNotEmptyException();
         }
         locationRepository.deleteById(id);
@@ -66,4 +64,13 @@ public class LocationService {
         Optional<Location> location = locationRepository.findById(id);
         return location.orElse(null);
     }
+
+    public int getEmployeeCountByLocation(Long locationId) {
+        return locationRepository.getEmployeeCountAtLocation(locationId).orElse(0);
+    }
+
+    public int getEquipmentCountByLocation(Long locationId) {
+        return locationRepository.getEquipmentCountAtLocation(locationId).orElse(0);
+    }
+
 }

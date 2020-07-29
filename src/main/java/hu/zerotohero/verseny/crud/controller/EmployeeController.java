@@ -27,7 +27,11 @@ public class EmployeeController {
                 NoSuchEntityException,
                 EquipmentAtDifferentLocationException,
                 IncompatibleJobAndEquipmentException,
-                EquipmentAlreadyOperatedException {
+                EquipmentAlreadyOperatedException,
+                InsufficientSalaryException,
+                SalaryDifferenceException,
+            InsufficientManagerSalaryException,
+                EmployeeNameNotValidException {
         return new ResponseEntity<>(employeeService.newEmployee(employeeDTO), HttpStatus.CREATED);
     }
 
@@ -39,7 +43,11 @@ public class EmployeeController {
             NoSuchEntityException,
             EquipmentAtDifferentLocationException,
             IncompatibleJobAndEquipmentException,
-            EquipmentAlreadyOperatedException {
+            EquipmentAlreadyOperatedException,
+            InsufficientSalaryException,
+            SalaryDifferenceException,
+            InsufficientManagerSalaryException,
+            EmployeeNameNotValidException {
         return new ResponseEntity<>(employeeService.updateEmployee(id, employeeDTO), HttpStatus.OK);
     }
 

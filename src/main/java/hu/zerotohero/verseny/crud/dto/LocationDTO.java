@@ -1,6 +1,8 @@
 package hu.zerotohero.verseny.crud.dto;
 
 import hu.zerotohero.verseny.crud.exception.EmptyAttributeException;
+import hu.zerotohero.verseny.crud.exception.LocationAddressNotValidException;
+import hu.zerotohero.verseny.crud.exception.LocationNameNotValidException;
 
 public class LocationDTO {
     private String name;
@@ -11,9 +13,17 @@ public class LocationDTO {
         this.address = address;
     }
 
-    public void validate() throws EmptyAttributeException {
+    public void validate() throws EmptyAttributeException,
+                    LocationNameNotValidException,
+                    LocationAddressNotValidException {
         if (name == null || address == null || name.trim().equals("") || address.trim().equals("")) {
             throw new EmptyAttributeException();
+        }
+        if (name.split(" ").length > 2) {
+            throw new LocationNameNotValidException();
+        }
+        if (!address.split(" ")[0].matches("^[0-9]{4}.*")) {
+            throw new LocationAddressNotValidException();
         }
     }
 

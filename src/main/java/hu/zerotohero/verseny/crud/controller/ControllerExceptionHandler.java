@@ -16,7 +16,13 @@ public class ControllerExceptionHandler {
             IncompatibleJobAndEquipmentException.class,
             LocationNotEmptyException.class,
             ManagerAlreadyAtLocationException.class,
-            ManagerDoesNotUseEquipmentException.class} )
+            ManagerDoesNotUseEquipmentException.class,
+            InsufficientSalaryException.class,
+            SalaryDifferenceException.class,
+            InsufficientManagerSalaryException.class,
+            EmployeeNameNotValidException.class,
+            LocationNameNotValidException.class,
+            LocationAddressNotValidException.class} )
     public ResponseEntity<?> handleWrongRequests(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }

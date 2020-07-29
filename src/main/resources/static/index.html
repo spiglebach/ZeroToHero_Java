@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waiter App</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        table {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<form id="connectionForm">
+    <label for="connect">WebSocket connection:</label>
+    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect</button>
+</form>
+<form id="orderForm">
+    <label for="name">Order name:</label>
+    <input type="text" id="name" class="form-control" placeholder="The order's name goes here...">
+    <button id="send" class="btn btn-default" type="submit">Send</button>
+</form>
+<table id="ordersTable">
+    <thead>
+        <tr>
+            <th>Completed orders</th>
+        </tr>
+    </thead>
+    <tbody id="orders">
+
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js" integrity="sha512-wMmlpbPCY778BJObxSz1tBYZTaz8q6eAJGiQke+r0AtqqgYPfAmwcip5p1HAmWKA7pxcqNeY8hz1mkHgZhqIiQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

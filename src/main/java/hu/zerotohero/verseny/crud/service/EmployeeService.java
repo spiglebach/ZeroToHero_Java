@@ -1,5 +1,6 @@
 package hu.zerotohero.verseny.crud.service;
 
+import hu.zerotohero.verseny.crud.exception.InsufficientManagerSalaryException;
 import hu.zerotohero.verseny.crud.entity.Equipment;
 import hu.zerotohero.verseny.crud.exception.*;
 import hu.zerotohero.verseny.crud.util.EmployeeJob;
@@ -23,6 +24,12 @@ public class EmployeeService {
     @Autowired
     private EquipmentService equipmentService;
 
+    public EmployeeService(EmployeeRepository employeeRepository, LocationService locationService, EquipmentService equipmentService) {
+        this.employeeRepository = employeeRepository;
+        this.locationService = locationService;
+        this.equipmentService = equipmentService;
+    }
+
     public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
         employeeRepository.findAll().forEach(employees::add);
@@ -36,7 +43,11 @@ public class EmployeeService {
                 IncompatibleJobAndEquipmentException,
                 EquipmentAtDifferentLocationException,
                 EquipmentAlreadyOperatedException,
-                ManagerAlreadyAtLocationException {
+                ManagerAlreadyAtLocationException,
+                InsufficientSalaryException,
+                SalaryDifferenceException,
+            InsufficientManagerSalaryException,
+                EmployeeNameNotValidException {
         employeeDTO.validate();
         String name = employeeDTO.getName();
         EmployeeJob job = employeeDTO.getJob();
@@ -51,8 +62,9 @@ public class EmployeeService {
         }
 
         validateJobAndEquipment(null, job, equipment, location);
+        validateSalaryForJobAtLocation(employeeDTO.getSalary(), job, location.getId());
 
-        Employee newEmployee = new Employee(name, job, location, equipment);
+        Employee newEmployee = new Employee(name, job, location, equipment, employeeDTO.getSalary());
         return employeeRepository.save(newEmployee);
     }
 
@@ -61,7 +73,11 @@ public class EmployeeService {
                 ManagerDoesNotUseEquipmentException, NoSuchEntityException,
                 EquipmentAtDifferentLocationException,
                 IncompatibleJobAndEquipmentException,
-                EquipmentAlreadyOperatedException {
+                EquipmentAlreadyOperatedException,
+                InsufficientSalaryException,
+                SalaryDifferenceException,
+            InsufficientManagerSalaryException,
+                EmployeeNameNotValidException {
         employeeDTO.validate();
         Employee employee = findById(employeeId);
         if (employee == null) {
@@ -82,22 +98,18 @@ public class EmployeeService {
         }
 
         validateJobAndEquipment(employee, newJob, newEquipment, newLocation);
+        validateSalaryForJobAtLocation(employeeDTO.getSalary(), newJob, newLocation.getId());
 
         employee.setName(newName);
         employee.setJob(newJob);
         employee.setWorksAt(newLocation);
         employee.setOperates(newEquipment);
+        employee.setSalary(employeeDTO.getSalary());
         return employeeRepository.save(employee);
     }
 
     public Employee findByOperatedEquipment(Long equipmentId) {
         return employeeRepository.findByOperatedEquipment(equipmentId).orElse(null);
-    }
-
-    public List<Employee> getEmployeesByLocation(Long locationId) {
-        List<Employee> employees = new ArrayList<>();
-        employeeRepository.findAllByLocation(locationId).forEach((employees::add));
-        return employees;
     }
 
     public Long deleteEmployee(Long employeeId) {
@@ -138,6 +150,22 @@ public class EmployeeService {
             Employee employeeOperatingGivenEquipment = findByOperatedEquipment(equipment.getId());
             if (employeeOperatingGivenEquipment != null) {
                 throw new EquipmentAlreadyOperatedException();
+            }
+        }
+    }
+
+    private void validateSalaryForJobAtLocation(Integer salary, EmployeeJob job, Long locationId)
+                        throws SalaryDifferenceException,
+            InsufficientManagerSalaryException {
+        if (EmployeeJob.MANAGER.equals(job)) {
+            Integer maxSalary = employeeRepository.findMaxSalaryOfNonManagersByLocation(locationId).orElse(null);
+            if (maxSalary != null && maxSalary > salary) {
+                throw new InsufficientManagerSalaryException();
+            }
+        } else {
+            Double avgSalary = employeeRepository.findAvgSalaryByLocationAndJob(locationId, job).orElse(null);
+            if (avgSalary != null && (salary < avgSalary * 0.8 || salary > avgSalary * 1.2)) {
+                throw new SalaryDifferenceException();
             }
         }
     }
