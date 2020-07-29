@@ -132,7 +132,7 @@ public class EmployeeService {
                         NoSuchEntityException, EquipmentAtDifferentLocationException,
                         IncompatibleJobAndEquipmentException, EquipmentAlreadyOperatedException {
         if (EmployeeJob.MANAGER.equals(job)) {
-            if (employee != null && !employee.getJob().equals(job) && getEmployeesByLocationAndJob(location.getId(), job).size() > 0) {
+            if ((employee == null || !employee.getJob().equals(job)) && getEmployeesByLocationAndJob(location.getId(), job).size() > 0) {
                 throw new ManagerAlreadyAtLocationException();
             }
             if (equipment != null) {
