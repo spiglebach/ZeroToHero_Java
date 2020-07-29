@@ -20,6 +20,9 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     @Query(value = "select max(emp.salary) from Employee emp join emp.worksAt loc where loc.id = :locationId and emp.job <> 'MANAGER'")
     Optional<Integer> findMaxSalaryOfNonManagersByLocation(@Param("locationId") Long locationId);
 
+    @Query(value = "select max(emp.salary) from Employee emp join emp.worksAt loc where loc.id = :locationId and emp.job = 'MANAGER'")
+    Optional<Integer> findManagerSalaryByLocation(@Param("locationId") Long locationId);
+
     @Query("select avg(emp.salary) from Employee emp join emp.worksAt loc where loc.id = :locationId and emp.job = :job")
     Optional<Double> findAvgSalaryByLocationAndJob(@Param("locationId") Long locationId, @Param("job")EmployeeJob job);
 }
