@@ -30,7 +30,7 @@ public class EmployeeController {
                 EquipmentAlreadyOperatedException,
                 InsufficientSalaryException,
                 SalaryDifferenceException,
-            InsufficientManagerSalaryException,
+            ManagerSalaryException,
                 EmployeeNameNotValidException {
         return new ResponseEntity<>(employeeService.newEmployee(employeeDTO), HttpStatus.CREATED);
     }
@@ -46,7 +46,7 @@ public class EmployeeController {
             EquipmentAlreadyOperatedException,
             InsufficientSalaryException,
             SalaryDifferenceException,
-            InsufficientManagerSalaryException,
+            ManagerSalaryException,
             EmployeeNameNotValidException {
         return new ResponseEntity<>(employeeService.updateEmployee(id, employeeDTO), HttpStatus.OK);
     }

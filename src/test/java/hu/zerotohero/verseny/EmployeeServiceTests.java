@@ -3,7 +3,7 @@ package hu.zerotohero.verseny;
 import hu.zerotohero.verseny.crud.entity.Employee;
 import hu.zerotohero.verseny.crud.entity.Equipment;
 import hu.zerotohero.verseny.crud.exception.EquipmentAtDifferentLocationException;
-import hu.zerotohero.verseny.crud.exception.InsufficientManagerSalaryException;
+import hu.zerotohero.verseny.crud.exception.ManagerSalaryException;
 import hu.zerotohero.verseny.crud.dto.EmployeeDTO;
 import hu.zerotohero.verseny.crud.entity.Location;
 import hu.zerotohero.verseny.crud.exception.InsufficientSalaryException;
@@ -108,7 +108,7 @@ public class EmployeeServiceTests {
         assertEquals(Long.valueOf(102L), employeeService.newEmployee(newCookDTO).getId());
     }
 
-    @Test(expected = InsufficientManagerSalaryException.class)
+    @Test(expected = ManagerSalaryException.class)
     public void newEmployee_managerWithLowerSalaryThanMaxNonManagerSalary_expectException() throws Exception {
         when(locationService.findById(any())).thenReturn(location1);
         when(employeeRepository.findMaxSalaryOfNonManagersByLocation(any())).thenReturn(Optional.of(450));

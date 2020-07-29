@@ -19,7 +19,7 @@ public class ControllerExceptionHandler {
             ManagerDoesNotUseEquipmentException.class,
             InsufficientSalaryException.class,
             SalaryDifferenceException.class,
-            InsufficientManagerSalaryException.class,
+            ManagerSalaryException.class,
             EmployeeNameNotValidException.class,
             LocationNameNotValidException.class,
             LocationAddressNotValidException.class} )

@@ -1,6 +1,6 @@
 package hu.zerotohero.verseny.crud.service;
 
-import hu.zerotohero.verseny.crud.exception.InsufficientManagerSalaryException;
+import hu.zerotohero.verseny.crud.exception.ManagerSalaryException;
 import hu.zerotohero.verseny.crud.entity.Equipment;
 import hu.zerotohero.verseny.crud.exception.*;
 import hu.zerotohero.verseny.crud.util.EmployeeJob;
@@ -46,7 +46,7 @@ public class EmployeeService {
                 ManagerAlreadyAtLocationException,
                 InsufficientSalaryException,
                 SalaryDifferenceException,
-            InsufficientManagerSalaryException,
+            ManagerSalaryException,
                 EmployeeNameNotValidException {
         employeeDTO.validate();
         String name = employeeDTO.getName();
@@ -76,7 +76,7 @@ public class EmployeeService {
                 EquipmentAlreadyOperatedException,
                 InsufficientSalaryException,
                 SalaryDifferenceException,
-            InsufficientManagerSalaryException,
+            ManagerSalaryException,
                 EmployeeNameNotValidException {
         employeeDTO.validate();
         Employee employee = findById(employeeId);
@@ -156,16 +156,20 @@ public class EmployeeService {
 
     private void validateSalaryForJobAtLocation(Integer salary, EmployeeJob job, Long locationId)
                         throws SalaryDifferenceException,
-            InsufficientManagerSalaryException {
+            ManagerSalaryException {
         if (EmployeeJob.MANAGER.equals(job)) {
             Integer maxSalary = employeeRepository.findMaxSalaryOfNonManagersByLocation(locationId).orElse(null);
             if (maxSalary != null && maxSalary > salary) {
-                throw new InsufficientManagerSalaryException();
+                throw new ManagerSalaryException();
             }
         } else {
             Double avgSalary = employeeRepository.findAvgSalaryByLocationAndJob(locationId, job).orElse(null);
             if (avgSalary != null && (salary < avgSalary * 0.8 || salary > avgSalary * 1.2)) {
                 throw new SalaryDifferenceException();
+            }
+            Integer managerSalary = employeeRepository.findManagerSalaryByLocation(locationId).orElse(null);
+            if (managerSalary == null || (managerSalary >= 0 && salary > managerSalary)) {
+                throw new ManagerSalaryException();
             }
         }
     }
