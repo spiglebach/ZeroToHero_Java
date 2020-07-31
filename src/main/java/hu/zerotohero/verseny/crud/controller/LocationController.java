@@ -5,6 +5,7 @@ import hu.zerotohero.verseny.crud.exception.*;
 import hu.zerotohero.verseny.crud.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +21,15 @@ public class LocationController {
         return new ResponseEntity<>(locationService.getLocations(), HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<?> newLocation(LocationDTO locationDTO)
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> newLocation(@RequestBody LocationDTO locationDTO)
             throws EmptyAttributeException,
                     LocationNameNotValidException,
                     LocationAddressNotValidException {
         return new ResponseEntity<>(locationService.newLocation(locationDTO), HttpStatus.OK);
     }
 
-    @PutMapping(value = "{id}")
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateLocation(@PathVariable Long id,
                                             @Validated @RequestBody LocationDTO locationDTO)
                                                 throws EmptyAttributeException,

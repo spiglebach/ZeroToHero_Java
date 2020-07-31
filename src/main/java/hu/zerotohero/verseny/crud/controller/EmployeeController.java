@@ -5,6 +5,7 @@ import hu.zerotohero.verseny.crud.exception.*;
 import hu.zerotohero.verseny.crud.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,8 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<?> newEmployee(EmployeeDTO employeeDTO)
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> newEmployee(@RequestBody EmployeeDTO employeeDTO)
             throws EmptyAttributeException,
                 ManagerAlreadyAtLocationException,
                 ManagerDoesNotUseEquipmentException,
@@ -35,7 +36,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.newEmployee(employeeDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "{id}")
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDTO employeeDTO)
             throws EmptyAttributeException,
             ManagerAlreadyAtLocationException,

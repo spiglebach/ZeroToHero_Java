@@ -7,6 +7,7 @@ import hu.zerotohero.verseny.crud.exception.NoSuchEntityException;
 import hu.zerotohero.verseny.crud.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +22,13 @@ public class EquipmentController {
         return new ResponseEntity<>(equipmentService.getEquipments(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<?> newEquipment(EquipmentDTO equipmentDTO) throws EmptyAttributeException,
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> newEquipment(@RequestBody EquipmentDTO equipmentDTO) throws EmptyAttributeException,
             NoSuchEntityException {
         return new ResponseEntity<>(equipmentService.newEquipment(equipmentDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "{id}")
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateEquipment(@PathVariable Long id,
                                              @RequestBody EquipmentDTO equipmentDTO)
                                                 throws EmptyAttributeException,
